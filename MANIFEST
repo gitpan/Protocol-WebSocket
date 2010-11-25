@@ -1,0 +1,27 @@
+lib/Protocol/WebSocket.pm
+lib/Protocol/WebSocket/Cookie.pm
+lib/Protocol/WebSocket/Cookie/Request.pm
+lib/Protocol/WebSocket/Cookie/Response.pm
+lib/Protocol/WebSocket/Frame.pm
+lib/Protocol/WebSocket/Handshake.pm
+lib/Protocol/WebSocket/Handshake/Client.pm
+lib/Protocol/WebSocket/Handshake/Server.pm
+lib/Protocol/WebSocket/Message.pm
+lib/Protocol/WebSocket/Request.pm
+lib/Protocol/WebSocket/Response.pm
+lib/Protocol/WebSocket/Stateful.pm
+lib/Protocol/WebSocket/URL.pm
+Makefile.PL
+MANIFEST			This list of files
+MANIFEST.SKIP
+README.pod
+t/00pod.t
+t/01pod-coverage.t
+t/client.t
+t/cookie.t
+t/frame.t
+t/request.t
+t/response.t
+t/server.t
+t/url.t
+META.yml                                 Module meta-data (added by MakeMaker)
