@@ -10,7 +10,7 @@ use Protocol::WebSocket::URL;
 sub new {
     my $self = shift->SUPER::new(@_);
 
-    $self->_build_url($self->{url});
+    $self->_set_url($self->{url}) if defined $self->{url};
 
     return $self;
 }
@@ -81,7 +81,8 @@ Protocol::WebSocket::Handshake::Client - WebSocket Client Handshake
 
 =head1 SYNOPSIS
 
-    my $h = Protocol::WebSocket::Handshake::Client->new;
+    my $h =
+      Protocol::WebSocket::Handshake::Client->new(url => 'ws://example.com');
 
     # Create request
     $h->to_string; # GET /demo HTTP/1.1

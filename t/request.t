@@ -3,11 +3,12 @@
 use strict;
 use warnings;
 
-use Test::More tests => 110;
+use Test::More tests => 117;
 
 use_ok 'Protocol::WebSocket::Request';
 
 my $req = Protocol::WebSocket::Request->new;
+my $message;
 
 is $req->state => 'request_line';
 ok !$req->is_done;
@@ -76,6 +77,20 @@ is $req->version => 75;
 is $req->state   => 'done';
 
 $req = Protocol::WebSocket::Request->new;
+$message =
+    "GET /demo HTTP/1.1\x0d\x0a"
+  . "Upgrade: WebSocket\x0d\x0a"
+  . "Connection: Upgrade\x0d\x0a";
+ok $req->parse($message);
+is $message => '';
+$message =
+  "Host: example.com:3000\x0d\x0a" . "Origin: null\x0d\x0a" . "\x0d\x0a";
+ok $req->parse($message);
+is $message      => '';
+is $req->version => 75;
+ok $req->is_done;
+
+$req = Protocol::WebSocket::Request->new;
 ok $req->parse("GET /demo HTTP/1.1\x0d\x0a");
 ok $req->parse("Upgrade: WebSocket\x0d\x0a");
 ok $req->parse("Connection: Upgrade\x0d\x0a");
@@ -130,12 +145,13 @@ ok $req->parse("GET /demo HTTP/1.1\x0d\x0a");
 ok $req->parse("Upgrade: WebSocket\x0d\x0a");
 ok $req->parse("Connection: Upgrade\x0d\x0a");
 ok $req->parse("Host: example.com\x0d\x0a");
-ok not defined $req->parse("\x0d\x0a");
+ok $req->parse("Origin: http://example.com\x0d\x0a");
+ok not defined $req->parse("\x0d\x0afoo");
 is $req->state => 'error';
 
 $req = Protocol::WebSocket::Request->new(
     version       => 75,
-    fields        => {Host => 'example.com'},
+    host          => 'example.com',
     resource_name => '/demo'
 );
 is $req->to_string => "GET /demo HTTP/1.1\x0d\x0a"
@@ -147,7 +163,7 @@ is $req->to_string => "GET /demo HTTP/1.1\x0d\x0a"
 
 $req = Protocol::WebSocket::Request->new(
     version       => 75,
-    fields        => {Host => 'example.com'},
+    host          => 'example.com',
     resource_name => '/demo'
 );
 is $req->to_string => "GET /demo HTTP/1.1\x0d\x0a"
@@ -158,7 +174,7 @@ is $req->to_string => "GET /demo HTTP/1.1\x0d\x0a"
   . "\x0d\x0a";
 
 $req = Protocol::WebSocket::Request->new(
-    fields        => {Host => 'example.com'},
+    host          => 'example.com',
     resource_name => '/demo',
     key1          => '18x 6]8vM;54 *(5:  {   U1]8  z [  8',
     key2          => '1_ tx7X d  <  nw  334J702) 7]o}` 0',
@@ -177,7 +193,7 @@ is $req->to_string => "GET /demo HTTP/1.1\x0d\x0a"
 is $req->checksum => "fQJ,fN/4F4!~K~MH";
 
 $req = Protocol::WebSocket::Request->new(
-    fields        => {Host => 'example.com'},
+    host          => 'example.com',
     resource_name => '/demo',
     key1          => '55 997',
     key2          => '3  3  64  98',
@@ -187,7 +203,7 @@ is $req->checksum =>
   "\xc4\x15\xc2\xc8\x29\x5c\x94\x8a\x95\xb9\x4d\xec\x5b\x1d\x33\xce";
 
 $req = Protocol::WebSocket::Request->new(
-    fields        => {Host => 'example.com'},
+    host          => 'example.com',
     resource_name => '/demo'
 );
 $req->to_string;

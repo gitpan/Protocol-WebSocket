@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Protocol-WebSocket
-version:            0.0001
+version:            0.0002
 abstract:           WebSocket request/response
 author:
     - Viacheslav Tykhanovskyi <vti@cpan.org>
@@ -9,9 +9,10 @@ distribution_type:  module
 configure_requires:  {}
 build_requires:  {}
 requires:
-    Carp:         0
-    Digest::MD5:  0
-    perl:         5.008007
+    Carp:          0
+    Digest::MD5:   0
+    perl:          5.008007
+    Scalar::Util:  0
 resources:
     bugtracker:  http://github.com/vti/protocol-websocket/issues
     license:     http://dev.perl.org/licenses/

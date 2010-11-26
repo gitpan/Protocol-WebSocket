@@ -3,7 +3,7 @@ package Protocol::WebSocket;
 use strict;
 use warnings;
 
-our $VERSION = 0.0001;
+our $VERSION = 0.0002;
 
 1;
 __END__
@@ -44,6 +44,10 @@ Low level WebSocket response parser and constructor.
 =head2 L<Protocol::WebSocket::URL>
 
 Low level WebSocket url parser and constructor.
+
+=head1 CREDITS
+
+Paul "LeoNerd" Evans
 
 =head1 AUTHOR
 
