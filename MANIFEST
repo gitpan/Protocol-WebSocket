@@ -1,3 +1,15 @@
+examples/anyevent-http-server.pl
+examples/anyevent.pl
+examples/event.pl
+examples/event_reactor.pl
+examples/io-async.pl
+examples/io-event.pl
+examples/io-lamda.pl
+examples/io-multiplex.pl
+examples/io-poll.pl
+examples/net-server-multiplex.pl
+examples/poe.pl
+examples/reflex.pl
 lib/Protocol/WebSocket.pm
 lib/Protocol/WebSocket/Cookie.pm
 lib/Protocol/WebSocket/Cookie/Request.pm
@@ -20,8 +32,12 @@ t/01pod-coverage.t
 t/client.t
 t/cookie.t
 t/frame.t
-t/request.t
-t/response.t
+t/request_75.t
+t/request_76.t
+t/request_common.t
+t/response_75.t
+t/response_76.t
+t/response_common.t
 t/server.t
 t/url.t
 META.yml                                 Module meta-data (added by MakeMaker)

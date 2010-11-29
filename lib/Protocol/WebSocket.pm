@@ -3,7 +3,7 @@ package Protocol::WebSocket;
 use strict;
 use warnings;
 
-our $VERSION = 0.0002;
+our $VERSION = 0.0003;
 
 1;
 __END__
@@ -44,6 +44,11 @@ Low level WebSocket response parser and constructor.
 =head2 L<Protocol::WebSocket::URL>
 
 Low level WebSocket url parser and constructor.
+
+=head1 EXAMPLES
+
+For examples on how to use L<Protocol::WebSocket> with various event loops see
+C<examples/> directory in the distribution.
 
 =head1 CREDITS
 

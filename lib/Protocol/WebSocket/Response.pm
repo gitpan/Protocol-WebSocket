@@ -9,24 +9,9 @@ use Protocol::WebSocket::URL;
 use Protocol::WebSocket::Cookie::Response;
 
 require Carp;
-use Scalar::Util 'readonly';
 
-sub new {
-    my $self = shift->SUPER::new(@_);
-
-    $self->{cookies} ||= [];
-
-    $self->{max_response_size} ||= 2048;
-
-    $self->state('response_line');
-
-    return $self;
-}
-
-sub origin   { @_ > 1 ? $_[0]->{origin}   = $_[1] : $_[0]->{origin} }
-sub location   { @_ > 1 ? $_[0]->{location}   = $_[1] : $_[0]->{location} }
-sub host   { @_ > 1 ? $_[0]->{host}   = $_[1] : $_[0]->{host} }
-sub secure { @_ > 1 ? $_[0]->{secure} = $_[1] : $_[0]->{secure} }
+sub location { @_ > 1 ? $_[0]->{location} = $_[1] : $_[0]->{location} }
+sub secure   { @_ > 1 ? $_[0]->{secure}   = $_[1] : $_[0]->{secure} }
 
 sub resource_name {
     @_ > 1 ? $_[0]->{resource_name} = $_[1] : $_[0]->{resource_name};
@@ -38,67 +23,6 @@ sub cookie {
     my $self = shift;
 
     push @{$self->{cookies}}, $self->_build_cookie(@_);
-}
-
-sub parse {
-    my $self  = shift;
-
-    return 1 unless defined $_[0];
-
-    return if $self->error;
-
-    my $buffer = $self->{buffer} .= $_[0];
-    $_[0] = '' unless readonly $_[0];
-
-    if (length $buffer > $self->{max_response_size}) {
-        $self->error('Request is too big');
-        return;
-    }
-
-    while ($buffer =~ s/^(.*?)\x0d\x0a//) {
-        my $line = $1;
-
-        if ($self->state eq 'response_line') {
-            unless ($line eq 'HTTP/1.1 101 WebSocket Protocol Handshake') {
-                $self->error('Wrong response line');
-                return;
-            }
-
-            $self->state('fields');
-        }
-        elsif ($line ne '') {
-            my ($name, $value) = split ': ' => $line => 2;
-
-            $self->fields->{$name} = $value;
-        }
-        else {
-            $self->state('body');
-        }
-    }
-
-    if ($self->state eq 'body') {
-        if ($self->fields->{'Sec-WebSocket-Origin'}) {
-            return 1 if length $buffer < 16;
-
-            $self->version(76);
-
-            my $checksum = substr $buffer, 0, 16, '';
-            $self->checksum($checksum);
-        }
-        else {
-            $self->version(75);
-        }
-
-        if ($self->_finalize) {
-            $_[0] = $buffer unless readonly $_[0];
-            return $self->done;
-        }
-
-        $self->error('Not a valid response');
-        return;
-    }
-
-    return 1;
 }
 
 sub number1 { shift->_number('number1', 'key1', @_) }
@@ -140,10 +64,15 @@ sub to_string {
     my $origin = $self->origin ? $self->origin : 'http://' . $location->host;
 
     if ($self->version <= 75) {
+        $string .= 'WebSocket-Protocol: ' . $self->subprotocol . "\x0d\x0a"
+          if defined $self->subprotocol;
         $string .= 'WebSocket-Origin: ' . $origin . "\x0d\x0a";
         $string .= 'WebSocket-Location: ' . $location->to_string . "\x0d\x0a";
     }
     else {
+        $string
+          .= 'Sec-WebSocket-Protocol: ' . $self->subprotocol . "\x0d\x0a"
+          if defined $self->subprotocol;
         $string .= 'Sec-WebSocket-Origin: ' . $origin . "\x0d\x0a";
         $string
           .= 'Sec-WebSocket-Location: ' . $location->to_string . "\x0d\x0a";
@@ -162,11 +91,43 @@ sub to_string {
     return $string;
 }
 
+sub _parse_first_line {
+    my ($self, $line) = @_;
+
+    unless ($line eq 'HTTP/1.1 101 WebSocket Protocol Handshake') {
+        $self->error('Wrong response line');
+        return;
+    }
+
+    return $self;
+}
+
+sub _parse_body {
+    my $self = shift;
+
+    if ($self->field('Sec-WebSocket-Origin')) {
+        return 1 if length $self->{buffer} < 16;
+
+        $self->version(76);
+
+        my $checksum = substr $self->{buffer}, 0, 16, '';
+        $self->checksum($checksum);
+    }
+    else {
+        $self->version(75);
+    }
+
+    return $self if $self->_finalize;
+
+    $self->error('Not a valid response');
+    return;
+}
+
 sub _finalize {
     my $self = shift;
 
-    my $location = $self->fields->{'Sec-WebSocket-Location'}
-      || $self->fields->{'WebSocket-Location'};
+    my $location = $self->field('Sec-WebSocket-Location')
+      || $self->field('WebSocket-Location');
     return unless defined $location;
     $self->location($location);
 
@@ -177,8 +138,11 @@ sub _finalize {
     $self->host($url->host);
     $self->resource_name($url->resource_name);
 
-    $self->origin($self->fields->{'Sec-WebSocket-Origin'}
-          || $self->fields->{'WebSocket-Origin'});
+    $self->origin($self->field('Sec-WebSocket-Origin')
+          || $self->field('WebSocket-Origin'));
+
+    $self->subprotocol($self->field('Sec-WebSocket-Protocol')
+          || $self->field('WebSocket-Protocol'));
 
     return 1;
 }
@@ -196,8 +160,31 @@ Protocol::WebSocket::Response - WebSocket Response
 =head1 SYNOPSIS
 
     # Constructor
+    $res = Protocol::WebSocket::Response->new(
+        host          => 'example.com',
+        resource_name => '/demo',
+        origin        => 'file://',
+        number1       => 777_007_543,
+        number2       => 114_997_259,
+        challenge     => "\x47\x30\x22\x2D\x5A\x3F\x47\x58"
+    );
+    $res->to_string; # HTTP/1.1 101 WebSocket Protocol Handshake
+                     # Upgrade: WebSocket
+                     # Connection: Upgrade
+                     # Sec-WebSocket-Origin: file://
+                     # Sec-WebSocket-Location: ws://example.com/demo
+                     #
+                     # 0st3Rl&q-2ZU^weu
 
     # Parser
+    $res = Protocol::WebSocket::Response->new;
+    $res->parse("HTTP/1.1 101 WebSocket Protocol Handshake\x0d\x0a");
+    $res->parse("Upgrade: WebSocket\x0d\x0a");
+    $res->parse("Connection: Upgrade\x0d\x0a");
+    $res->parse("Sec-WebSocket-Origin: file://\x0d\x0a");
+    $res->parse("Sec-WebSocket-Location: ws://example.com/demo\x0d\x0a");
+    $res->parse("\x0d\x0a");
+    $res->parse("0st3Rl&q-2ZU^weu");
 
 =head1 DESCRIPTION
 
@@ -234,5 +221,31 @@ Construct a WebSocket response.
 =head2 C<cookie>
 
 =head2 C<cookies>
+
+=head2 C<key1>
+
+    $self->key1;
+
+Set or get C<Sec-WebSocket-Key1> field.
+
+=head2 C<key2>
+
+    $self->key2;
+
+Set or get C<Sec-WebSocket-Key2> field.
+
+=head2 C<number1>
+
+    $self->number1;
+    $self->number1(123456);
+
+Set or extract from C<Sec-WebSocket-Key1> generated C<number> value.
+
+=head2 C<number2>
+
+    $self->number2;
+    $self->number2(123456);
+
+Set or extract from C<Sec-WebSocket-Key2> generated C<number> value.
 
 =cut

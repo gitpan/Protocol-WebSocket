@@ -7,13 +7,12 @@ use base 'Protocol::WebSocket::Handshake';
 
 sub parse {
     my $self  = shift;
-    my $chunk = shift;
 
     my $req = $self->req;
     my $res = $self->res;
 
     unless ($req->is_done) {
-        unless ($req->parse($chunk)) {
+        unless ($req->parse($_[0])) {
             $self->error($req->error);
             return;
         }
@@ -92,10 +91,10 @@ Create a new L<Protocol::WebSocket::Handshake::Server> instance.
 
 =head2 C<parse>
 
-    $handshake->parse;
+    $handshake->parse($buffer);
 
 Parse a WebSocket client request. Returns C<undef> and sets C<error> attribute
-on error.
+on error. Buffer is modified.
 
 =head2 C<to_string>
 

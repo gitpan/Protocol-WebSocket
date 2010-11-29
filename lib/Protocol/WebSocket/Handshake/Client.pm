@@ -28,13 +28,12 @@ sub url {
 
 sub parse {
     my $self  = shift;
-    my $chunk = shift;
 
     my $req = $self->req;
     my $res = $self->res;
 
     unless ($res->is_done) {
-        unless ($res->parse($chunk)) {
+        unless ($res->parse($_[0])) {
             $self->error($res->error);
             return;
         }
@@ -131,10 +130,10 @@ Create a new L<Protocol::WebSocket::Handshake::Client> instance.
 
 =head2 C<parse>
 
-    $handshake->parse;
+    $handshake->parse($buffer);
 
 Parse a WebSocket server response. Returns C<undef> and sets C<error> attribute
-on error.
+on error. Buffer is modified.
 
 =head2 C<to_string>
 
