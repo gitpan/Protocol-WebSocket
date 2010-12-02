@@ -101,7 +101,7 @@ sub parse {
 
     return unless $self->_append(@_);
 
-    while (defined(my $line = $self->_get_line)) {
+    while (!$self->is_state('body') && defined(my $line = $self->_get_line)) {
         if ($self->state eq 'first_line') {
             return unless defined $self->_parse_first_line($line);
 
@@ -112,6 +112,7 @@ sub parse {
         }
         else {
             $self->state('body');
+            last;
         }
     }
 
@@ -175,6 +176,8 @@ sub _get_line {
     return;
 }
 
+sub _parse_first_line {shift}
+
 sub _parse_field {
     my $self = shift;
     my $line = shift;
@@ -189,6 +192,8 @@ sub _parse_field {
 
     return $self;
 }
+
+sub _parse_body {shift}
 
 1;
 __END__

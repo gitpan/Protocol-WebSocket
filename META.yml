@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Protocol-WebSocket
-version:            0.0003
+version:            0.0004
 abstract:           WebSocket request/response
 author:
     - Viacheslav Tykhanovskyi <vti@cpan.org>
