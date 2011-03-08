@@ -5,7 +5,7 @@ use warnings;
 
 use base 'Protocol::WebSocket::Stateful';
 
-use Scalar::Util 'readonly';
+use Scalar::Util qw(readonly blessed);
 require Digest::MD5;
 
 sub new {
@@ -124,7 +124,7 @@ sub parse {
     # Need more data
     return $rv unless ref $rv;
 
-    $_[0] = $self->{buffer} unless readonly $_[0];
+    $_[0] = $self->{buffer} unless readonly $_[0] || ref $_[0];
     return $self->done;
 }
 
@@ -132,20 +132,10 @@ sub _extract_number {
     my $self = shift;
     my $key  = shift;
 
-    my $number = '';
-    while ($key =~ m/(\d)/g) {
-        $number .= $1;
-    }
-    $number = int($number);
+    my $number = join '' => $key =~ m/\d+/g;
+    my $spaces = $key =~ s/ / /g;
 
-    my $spaces = 0;
-    while ($key =~ m/ /g) {
-        $spaces++;
-    }
-
-    if ($spaces == 0) {
-        return;
-    }
+    return if $spaces == 0;
 
     return int($number / $spaces);
 }
@@ -155,8 +145,14 @@ sub _append {
 
     return if $self->error;
 
-    $self->{buffer} .= $_[0];
-    $_[0] = '' unless readonly $_[0];
+    if (ref $_[0]) {
+        $_[0]->read(my $buf, $self->{max_message_size});
+        $self->{buffer} .= $buf;
+    }
+    else {
+        $self->{buffer} .= $_[0];
+        $_[0] = '' unless readonly $_[0];
+    }
 
     if (length $self->{buffer} > $self->{max_message_size}) {
         $self->error('Message is too long');

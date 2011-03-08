@@ -5,32 +5,43 @@ use warnings;
 
 use base 'Protocol::WebSocket::Handshake';
 
+use Protocol::WebSocket::Request;
+
+sub new_from_psgi {
+    my $class = shift;
+
+    my $req = Protocol::WebSocket::Request->new_from_psgi(@_);
+    my $self = $class->new(req => $req);
+
+    return $self;
+}
+
 sub parse {
-    my $self  = shift;
+    my $self = shift;
 
     my $req = $self->req;
     my $res = $self->res;
 
-    unless ($req->is_done) {
-        unless ($req->parse($_[0])) {
-            $self->error($req->error);
-            return;
-        }
+    return 1 if $req->is_done;
 
-        if ($req->is_done) {
-            $res->version($req->version);
-            $res->host($req->host);
+    unless ($req->parse($_[0])) {
+        $self->error($req->error);
+        return;
+    }
 
-            #$res->secure($req->secure);
-            $res->resource_name($req->resource_name);
-            $res->origin($req->origin);
+    return 1 unless $req->is_done;
 
-            if ($req->version > 75) {
-                $res->number1($req->number1);
-                $res->number2($req->number2);
-                $res->challenge($req->challenge);
-            }
-        }
+    $res->version($req->version);
+    $res->host($req->host);
+
+    #$res->secure($req->secure);
+    $res->resource_name($req->resource_name);
+    $res->origin($req->origin);
+
+    if ($req->version > 75) {
+        $res->number1($req->number1);
+        $res->number2($req->number2);
+        $res->challenge($req->challenge);
     }
 
     return 1;
@@ -89,12 +100,27 @@ again and again.
 
 Create a new L<Protocol::WebSocket::Handshake::Server> instance.
 
+=head2 C<new_from_psgi>
+
+    my $env = {
+        HTTP_HOST => 'example.com',
+        HTTP_CONNECTION => 'Upgrade',
+        ...
+    };
+    my $handshake = Protocol::WebSocket::Handshake::Server->new_from_psgi($env);
+
+Create a new L<Protocol::WebSocket::Handshake::Server> instance from L<PSGI>
+environment.
+
 =head2 C<parse>
 
     $handshake->parse($buffer);
+    $handshake->parse($handle);
 
 Parse a WebSocket client request. Returns C<undef> and sets C<error> attribute
-on error. Buffer is modified.
+on error.
+
+When buffer is passed it's modified (unless readonly).
 
 =head2 C<to_string>
 

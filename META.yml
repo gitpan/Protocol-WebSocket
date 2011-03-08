@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Protocol-WebSocket
-version:            0.0004
+version:            0.009
 abstract:           WebSocket request/response
 author:
     - Viacheslav Tykhanovskyi <vti@cpan.org>
@@ -22,7 +22,7 @@ no_index:
         - t
         - inc
         - t
-generated_by:       ExtUtils::MakeMaker version 6.56
+generated_by:       ExtUtils::MakeMaker version 6.55_02
 meta-spec:
     url:      http://module-build.sourceforge.net/META-spec-v1.4.html
     version:  1.4

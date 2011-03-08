@@ -1,3 +1,4 @@
+examples/5000
 examples/anyevent-http-server.pl
 examples/anyevent.pl
 examples/event.pl
@@ -8,6 +9,8 @@ examples/io-lamda.pl
 examples/io-multiplex.pl
 examples/io-poll.pl
 examples/net-server-multiplex.pl
+examples/nginx-engine.pl
+examples/plack.psgi
 examples/poe.pl
 examples/reflex.pl
 lib/Protocol/WebSocket.pm
@@ -29,9 +32,13 @@ MANIFEST.SKIP
 README.pod
 t/00pod.t
 t/01pod-coverage.t
+t/challenge
 t/client.t
 t/cookie.t
+t/empty
 t/frame.t
+t/message
+t/message.t
 t/request_75.t
 t/request_76.t
 t/request_common.t
