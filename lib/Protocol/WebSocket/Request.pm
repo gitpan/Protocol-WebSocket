@@ -40,6 +40,12 @@ sub new_from_psgi {
     );
     $self->state('body');
 
+    if (   $env->{HTTP_X_FORWARDED_PROTO}
+        && $env->{HTTP_X_FORWARDED_PROTO} eq 'https')
+    {
+        $self->secure(1);
+    }
+
     return $self;
 }
 
@@ -74,6 +80,7 @@ sub to_string {
     $string .= "Host: " . $self->host . "\x0d\x0a";
 
     my $origin = $self->origin ? $self->origin : 'http://' . $self->host;
+    $origin =~ s{^http:}{https:} if $self->secure;
     $string .= "Origin: " . $origin . "\x0d\x0a";
 
     if ($self->version > 75) {
@@ -271,6 +278,8 @@ sub _finalize {
     my $origin = $self->field('Origin');
     return unless $origin;
     $self->origin($origin);
+
+    $self->secure(1) if $self->origin =~ m{^https:};
 
     my $host = $self->field('Host');
     return unless $host;

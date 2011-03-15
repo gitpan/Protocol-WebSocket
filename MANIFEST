@@ -1,4 +1,4 @@
-examples/5000
+Changes
 examples/anyevent-http-server.pl
 examples/anyevent.pl
 examples/event.pl
@@ -29,10 +29,8 @@ lib/Protocol/WebSocket/URL.pm
 Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
-README.pod
-t/00pod.t
-t/01pod-coverage.t
 t/challenge
+t/client-ssl.t
 t/client.t
 t/cookie.t
 t/empty
@@ -45,6 +43,10 @@ t/request_common.t
 t/response_75.t
 t/response_76.t
 t/response_common.t
+t/server-ssl.t
 t/server.t
 t/url.t
+xt/changes.t
+xt/pod-coverage.t
+xt/pod.t
 META.yml                                 Module meta-data (added by MakeMaker)

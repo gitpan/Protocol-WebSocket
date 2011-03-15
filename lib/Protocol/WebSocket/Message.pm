@@ -5,7 +5,7 @@ use warnings;
 
 use base 'Protocol::WebSocket::Stateful';
 
-use Scalar::Util qw(readonly blessed);
+use Scalar::Util qw(readonly);
 require Digest::MD5;
 
 sub new {
@@ -29,6 +29,8 @@ sub new {
 
     return $self;
 }
+
+sub secure { @_ > 1 ? $_[0]->{secure} = $_[1] : $_[0]->{secure} }
 
 sub fields { shift->{fields} }
 
@@ -186,6 +188,10 @@ sub _parse_field {
 
     $self->field($name => $value);
 
+    if ($name =~ m/^x-forwarded-proto$/i) {
+        $self->secure(1);
+    }
+
     return $self;
 }
 
@@ -209,6 +215,16 @@ L<Protocol::WebSocket::Response>.
 
 =head2 C<fields>
 
+=head2 C<field>
+
+=head2 C<host>
+
+=head2 C<origin>
+
+=head2 C<secure>
+
+=head2 C<subprotocol>
+
 =head2 C<error>
 
 =head2 C<number1>
@@ -224,5 +240,7 @@ L<Protocol::WebSocket::Response>.
 Create a new L<Protocol::WebSocket::Message> instance.
 
 =head2 C<checksum>
+
+=head2 C<parse>
 
 =cut
