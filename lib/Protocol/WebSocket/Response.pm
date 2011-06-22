@@ -63,7 +63,7 @@ sub headers {
         resource_name => $self->resource_name,
     );
     my $origin = $self->origin ? $self->origin : 'http://' . $location->host;
-    $origin =~ s{^http:}{https:} if $self->secure;
+    $origin =~ s{^http:}{https:} if !$self->origin && $self->secure;
 
     if ($self->version <= 75) {
         push @$headers, 'WebSocket-Protocol' => $self->subprotocol
@@ -120,7 +120,7 @@ sub _parse_first_line {
     my ($self, $line) = @_;
 
     my $status = $self->status;
-    unless ($line eq "HTTP/1.1 $status WebSocket Protocol Handshake") {
+    unless ($line =~ m{^HTTP/1\.1 $status }) {
         $self->error('Wrong response line');
         return;
     }
