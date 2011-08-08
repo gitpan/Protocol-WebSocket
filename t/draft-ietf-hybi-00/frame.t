@@ -5,13 +5,13 @@ use warnings;
 
 use utf8;
 
-use Test::More tests => 26;
+use Test::More tests => 27;
 
 use Encode;
 
 use_ok 'Protocol::WebSocket::Frame';
 
-my $f = Protocol::WebSocket::Frame->new;
+my $f = Protocol::WebSocket::Frame->new(version => 'draft-ietf-hybi-00');
 
 $f->append;
 ok not defined $f->next;
@@ -28,6 +28,11 @@ $f->append("\x00");
 ok not defined $f->next;
 $f->append("\xff");
 is $f->next => '';
+
+$f->append("\xff");
+$f->append("\x00");
+is $f->next => '';
+ok $f->is_close;
 
 $f->append("\x00");
 ok not defined $f->next;
@@ -56,18 +61,42 @@ is $frame => '';
 $f->append("\x00" . Encode::encode_utf8('☺') . "\xff");
 is $f->next => '☺';
 
-$f = Protocol::WebSocket::Frame->new;
-is $f->to_string => "\x00\xff";
+$f = Protocol::WebSocket::Frame->new(version => 'draft-ietf-hybi-00');
+is $f->to_bytes => "\x00\xff";
 
-$f = Protocol::WebSocket::Frame->new('123');
-is $f->to_string => "\x00123\xff";
+#$f = Protocol::WebSocket::Frame->new(
+#    buffer  => '123',
+#    version => 'draft-ietf-hybi-00'
+#);
+#is $f->to_string => "\x00123\xff";
 
-$f = Protocol::WebSocket::Frame->new('☺');
-is $f->to_string => "\x00" . "☺" . "\xff";
+#$f = Protocol::WebSocket::Frame->new(
+#    buffer  => '☺',
+#    version => 'draft-ietf-hybi-00'
+#);
+#is $f->to_string => "\x00" . "☺" . "\xff";
 
-$f = Protocol::WebSocket::Frame->new(Encode::encode_utf8('☺'));
-is $f->to_string => "\x00" . "☺" . "\xff";
+#$f = Protocol::WebSocket::Frame->new(
+#    buffer  => Encode::encode_utf8('☺'),
+#    version => 'draft-ietf-hybi-00'
+#);
+#is $f->to_string => "\x00" . "☺" . "\xff";
 
 # We pass characters, but send bytes
-$f = Protocol::WebSocket::Frame->new('☺');
+$f = Protocol::WebSocket::Frame->new(
+    buffer  => '☺',
+    version => 'draft-ietf-hybi-00'
+);
 is $f->to_bytes => "\x00" . Encode::encode_utf8("☺") . "\xff";
+
+$f = Protocol::WebSocket::Frame->new(
+    version => 'draft-ietf-hybi-00',
+    type    => 'ping'
+);
+is $f->to_bytes => "\x00\xff";
+
+$f = Protocol::WebSocket::Frame->new(
+    version => 'draft-ietf-hybi-00',
+    type    => 'close'
+);
+is $f->to_bytes => "\xff\x00";

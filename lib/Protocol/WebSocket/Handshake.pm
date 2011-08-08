@@ -18,6 +18,8 @@ sub new {
 
 sub error { @_ > 1 ? $_[0]->{error} = $_[1] : $_[0]->{error} }
 
+sub version { $_[0]->req->version }
+
 sub req { shift->{req} ||= Protocol::WebSocket::Request->new }
 sub res { shift->{res} ||= Protocol::WebSocket::Response->new }
 
@@ -41,12 +43,11 @@ L<Protocol::WebSocket::Handshake::Server>.
 
 Set or get handshake error.
 
-=head2 C<secure>
+=head2 C<version>
 
-    $handshake->secure;
-    $handshake->secure(1);
+    $handshake->version;
 
-Check or set whether a handshake is secured with SSL/TLS.
+Set or get handshake version.
 
 =head1 METHODS
 

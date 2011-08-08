@@ -13,6 +13,17 @@ examples/nginx-engine.pl
 examples/plack.psgi
 examples/poe.pl
 examples/reflex.pl
+inc/Module/AutoInstall.pm
+inc/Module/Install.pm
+inc/Module/Install/AutoInstall.pm
+inc/Module/Install/Base.pm
+inc/Module/Install/Can.pm
+inc/Module/Install/Fetch.pm
+inc/Module/Install/Include.pm
+inc/Module/Install/Makefile.pm
+inc/Module/Install/Metadata.pm
+inc/Module/Install/Win32.pm
+inc/Module/Install/WriteAll.pm
 lib/Protocol/WebSocket.pm
 lib/Protocol/WebSocket/Cookie.pm
 lib/Protocol/WebSocket/Cookie/Request.pm
@@ -29,10 +40,27 @@ lib/Protocol/WebSocket/URL.pm
 Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
+META.yml
+MYMETA.json
+MYMETA.yml
 t/challenge
 t/client-ssl.t
 t/client.t
 t/cookie.t
+t/draft-hixie-75/request.t
+t/draft-hixie-75/response.t
+t/draft-ietf-hybi-00/client-ssl.t
+t/draft-ietf-hybi-00/client.t
+t/draft-ietf-hybi-00/frame.t
+t/draft-ietf-hybi-00/request.t
+t/draft-ietf-hybi-00/response.t
+t/draft-ietf-hybi-00/server-ssl.t
+t/draft-ietf-hybi-00/server.t
+t/draft-ietf-hybi-10/client.t
+t/draft-ietf-hybi-10/frame.t
+t/draft-ietf-hybi-10/request.t
+t/draft-ietf-hybi-10/response.t
+t/draft-ietf-hybi-10/server.t
 t/empty
 t/frame.t
 t/message
@@ -49,4 +77,3 @@ t/url.t
 xt/changes.t
 xt/pod-coverage.t
 xt/pod.t
-META.yml                                 Module meta-data (added by MakeMaker)

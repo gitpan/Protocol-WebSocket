@@ -5,12 +5,19 @@ use warnings;
 
 use base 'Protocol::WebSocket::Handshake';
 
+require Carp;
+
 use Protocol::WebSocket::URL;
 
 sub new {
     my $self = shift->SUPER::new(@_);
 
     $self->_set_url($self->{url}) if defined $self->{url};
+
+    if (my $version = $self->{version}) {
+        $self->req->version($version);
+        $self->res->version($version);
+    }
 
     return $self;
 }
@@ -39,7 +46,9 @@ sub parse {
         }
 
         if ($res->is_done) {
-            if ($req->version > 75 && $req->checksum ne $res->checksum) {
+            if (   $req->version eq 'draft-ietf-hybi-00'
+                && $req->checksum ne $res->checksum)
+            {
                 $self->error('Checksum is wrong.');
                 return;
             }
@@ -86,25 +95,11 @@ Protocol::WebSocket::Handshake::Client - WebSocket Client Handshake
       Protocol::WebSocket::Handshake::Client->new(url => 'ws://example.com');
 
     # Create request
-    $h->to_string; # GET /demo HTTP/1.1
-                   # Upgrade: WebSocket
-                   # Connection: Upgrade
-                   # Host: example.com
-                   # Origin: http://example.com
-                   # Sec-WebSocket-Key1: 18x 6]8vM;54 *(5:  {   U1]8  z [  8
-                   # Sec-WebSocket-Key2: 1_ tx7X d  <  nw  334J702) 7]o}` 0
-                   #
-                   # Tm[K T2u
+    $h->to_string;
 
     # Parse server response
     $h->parse(<<"EOF");
-    HTTP/1.1 101 WebSocket Protocol Handshake
-    Upgrade: WebSocket
-    Connection: Upgrade
-    Sec-WebSocket-Origin: http://example.com
-    Sec-WebSocket-Location: ws://example.com/demo
-
-    fQJ,fN/4F4!~K~MH
+        WebSocket HTTP message
     EOF
 
     $h->error;   # Check if there were any errors
