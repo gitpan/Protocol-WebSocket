@@ -44,8 +44,6 @@ META.yml
 MYMETA.json
 MYMETA.yml
 t/challenge
-t/client-ssl.t
-t/client.t
 t/cookie.t
 t/draft-hixie-75/request.t
 t/draft-hixie-75/response.t
@@ -62,17 +60,10 @@ t/draft-ietf-hybi-10/request.t
 t/draft-ietf-hybi-10/response.t
 t/draft-ietf-hybi-10/server.t
 t/empty
-t/frame.t
 t/message
 t/message.t
-t/request_75.t
-t/request_76.t
 t/request_common.t
-t/response_75.t
-t/response_76.t
 t/response_common.t
-t/server-ssl.t
-t/server.t
 t/url.t
 xt/changes.t
 xt/pod-coverage.t
