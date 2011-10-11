@@ -4,7 +4,7 @@
       "Viacheslav Tykhanovskyi <vti@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Install version 1.01, CPAN::Meta::Converter version 2.110930001",
+   "generated_by" : "Module::Install version 1.01, CPAN::Meta::Converter version 2.112150",
    "license" : [
       "artistic_2"
    ],
@@ -54,5 +54,5 @@
          "url" : "http://github.com/vti/protocol-websocket/"
       }
    },
-   "version" : "0.00904"
+   "version" : "0.00905"
 }

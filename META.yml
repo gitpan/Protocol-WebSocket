@@ -29,4 +29,4 @@ resources:
   bugtracker: http://github.com/vti/protocol-websocket/issues
   license: http://dev.perl.org/licenses/
   repository: http://github.com/vti/protocol-websocket/
-version: 0.00904
+version: 0.00905
