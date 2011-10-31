@@ -7,7 +7,7 @@ use Test::More tests => 8;
 
 use_ok 'Protocol::WebSocket::Handshake::Client';
 
-my $h = Protocol::WebSocket::Handshake::Client->new;
+my $h = Protocol::WebSocket::Handshake::Client->new(version => 'draft-ietf-hybi-10');
 $h->url('ws://example.com/demo');
 
 # Mocking

@@ -58,6 +58,7 @@ is $req->host          => 'server.example.com';
 is $req->origin        => 'http://example.com';
 
 $req = Protocol::WebSocket::Request->new(
+    version       => 'draft-ietf-hybi-10',
     host          => 'server.example.com',
     origin        => 'http://example.com',
     subprotocol   => 'chat, superchat',
