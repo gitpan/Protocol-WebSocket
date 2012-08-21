@@ -53,7 +53,7 @@ sub new_from_psgi {
         $fields->{'sec-websocket-key2'} = $env->{HTTP_SEC_WEBSOCKET_KEY2};
     }
 
-    if ($version eq 'draft-ietf-hybi-10') {
+    if ($version eq 'draft-ietf-hybi-10' || $version eq 'draft-ietf-hybi-17') {
         $fields->{'sec-websocket-origin'} = $env->{HTTP_SEC_WEBSOCKET_ORIGIN};
     }
     else {
@@ -171,6 +171,38 @@ sub to_string {
     return $string;
 }
 
+sub parse {
+    my $self = shift;
+
+    my $retval = $self->SUPER::parse($_[0]);
+
+    if (!$self->{finalized} && ($self->is_body || $self->is_done)) {
+        $self->{finalized} = 1;
+
+        if ($self->key1 && $self->key2) {
+            $self->version('draft-ietf-hybi-00');
+        }
+        elsif ($self->key) {
+            if ($self->field('sec-websocket-version') eq '13') {
+                $self->version('draft-ietf-hybi-17');
+            }
+            else {
+                $self->version('draft-ietf-hybi-10');
+            }
+        }
+        else {
+            $self->version('draft-hixie-75');
+        }
+
+        if (!$self->_finalize) {
+            $self->error('Not a valid request');
+            return;
+        }
+    }
+
+    return $retval;
+}
+
 sub _parse_first_line {
     my ($self, $line) = @_;
 
@@ -199,19 +231,6 @@ sub _parse_body {
 
         my $challenge = substr $self->{buffer}, 0, 8, '';
         $self->challenge($challenge);
-
-        $self->version('draft-ietf-hybi-00');
-    }
-    elsif ($self->key) {
-        if ($self->field('sec-websocket-version') eq '13') {
-            $self->version('draft-ietf-hybi-17');
-        }
-        else {
-            $self->version('draft-ietf-hybi-10');
-        }
-    }
-    else {
-        $self->version('draft-hixie-75');
     }
 
     if (length $self->{buffer}) {
@@ -219,10 +238,7 @@ sub _parse_body {
         return;
     }
 
-    return $self if $self->_finalize;
-
-    $self->error('Not a valid request');
-    return;
+    return $self;
 }
 
 sub _number {
@@ -353,7 +369,7 @@ sub _finalize {
     return unless grep { lc $_ eq 'upgrade' } @connections;
 
     my $origin = $self->field('Sec-WebSocket-Origin') || $self->field('Origin');
-    return unless $origin;
+    #return unless $origin;
     $self->origin($origin);
 
     $self->secure(1) if $self->origin =~ m{^https:};

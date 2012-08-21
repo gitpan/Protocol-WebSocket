@@ -55,10 +55,15 @@ t/draft-ietf-hybi-00/response.t
 t/draft-ietf-hybi-00/server-ssl.t
 t/draft-ietf-hybi-00/server.t
 t/draft-ietf-hybi-10/client.t
-t/draft-ietf-hybi-10/frame.t
 t/draft-ietf-hybi-10/request.t
 t/draft-ietf-hybi-10/response.t
 t/draft-ietf-hybi-10/server.t
+t/draft-ietf-hybi-17/client.t
+t/draft-ietf-hybi-17/frame.t
+t/draft-ietf-hybi-17/request.t
+t/draft-ietf-hybi-17/request_psgi.t
+t/draft-ietf-hybi-17/response.t
+t/draft-ietf-hybi-17/server.t
 t/empty
 t/message
 t/message.t

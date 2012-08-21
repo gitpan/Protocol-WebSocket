@@ -6,6 +6,7 @@ use warnings;
 use base 'Protocol::WebSocket::Handshake';
 
 use Protocol::WebSocket::Request;
+use Protocol::WebSocket::Frame;
 
 sub new_from_psgi {
     my $class = shift;
@@ -29,21 +30,27 @@ sub parse {
         return;
     }
 
-    return 1 unless $req->is_done;
+    if ($req->is_body || $req->is_done) {
+        $res->version($req->version);
+        $res->host($req->host);
 
-    $res->version($req->version);
-    $res->host($req->host);
-
-    $res->secure($req->secure);
-    $res->resource_name($req->resource_name);
-    $res->origin($req->origin);
+        $res->secure($req->secure);
+        $res->resource_name($req->resource_name);
+        $res->origin($req->origin);
+    }
 
     if ($req->version eq 'draft-ietf-hybi-00') {
-        $res->number1($req->number1);
-        $res->number2($req->number2);
-        $res->challenge($req->challenge);
+        if ($self->is_done) {
+            $res->checksum(undef);
+            $res->number1($req->number1);
+            $res->number2($req->number2);
+            $res->challenge($req->challenge);
+        }
+        else {
+            $res->checksum('');
+        }
     }
-    elsif ($req->version eq 'draft-ietf-hybi-10'
+    elsif ($self->is_done && $req->version eq 'draft-ietf-hybi-10'
         || $req->version eq 'draft-ietf-hybi-17')
     {
         $res->key($req->key);
@@ -52,8 +59,30 @@ sub parse {
     return 1;
 }
 
+sub is_body   { shift->req->is_body }
 sub is_done   { shift->req->is_done }
-sub to_string { shift->res->to_string }
+sub to_string {
+    my $self = shift;
+
+    if ($self->is_body) {
+        return $self->{partial} = $self->res->to_string;
+    }
+    elsif ($self->{partial}) {
+        my $to_string = $self->res->to_string;
+
+        $to_string =~ s/^\Q$self->{partial}\E//;
+
+        return $to_string;
+    }
+
+    return $self->res->to_string;
+}
+
+sub build_frame {
+    my $self = shift;
+
+    return Protocol::WebSocket::Frame->new(version => $self->version, @_);
+}
 
 1;
 __END__
@@ -111,9 +140,19 @@ on error.
 
 When buffer is passed it's modified (unless readonly).
 
+=head2 C<build_frame>
+
+    $handshake->build_frame;
+
+Builds L<Protocol::WebSocket::Frame> with an appropriate version.
+
 =head2 C<to_string>
 
 Construct a WebSocket server response.
+
+=head2 C<is_body>
+
+Check whether handshake is in body state.
 
 =head2 C<is_done>
 

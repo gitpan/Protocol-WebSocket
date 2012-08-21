@@ -17,6 +17,7 @@ sub state { @_ > 1 ? $_[0]->{state} = $_[1] : $_[0]->{state} }
 
 sub done     { shift->state('done') }
 sub is_state { shift->state eq shift }
+sub is_body  { shift->is_state('body') }
 sub is_done  { shift->is_state('done') }
 
 1;
@@ -43,6 +44,8 @@ Create a new L<Protocol::WebSocket::Stateful> instance.
 =head2 C<done>
 
 =head2 C<is_state>
+
+=head2 C<is_body>
 
 =head2 C<is_done>
 

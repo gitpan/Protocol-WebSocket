@@ -3,7 +3,7 @@ package Protocol::WebSocket;
 use strict;
 use warnings;
 
-our $VERSION = 0.00906;
+our $VERSION = '0.10';
 
 1;
 __END__
@@ -21,8 +21,7 @@ Protocol::WebSocket - WebSocket protocol
 
     $hs->is_done; # tells us when handshake is done
 
-    # Passing version is important for backwards compatibility
-    my $frame = Protocol::WebSocket::Frame->new(version => $hs->version);
+    my $frame = $hs->build_frame;
 
     $frame->append('some data from the client');
 
@@ -31,10 +30,10 @@ Protocol::WebSocket - WebSocket protocol
 
             # Send close frame back
             send(
-                Protocol::WebSocket::Frame->new(
+                $hs->build_frame(
                     type    => 'close',
                     version => $version
-                )
+                )->to_bytes
             );
 
             return;
@@ -53,7 +52,7 @@ L<Protocol::WebSocket> supports the following WebSocket protocol versions:
 
     draft-ietf-hybi-17 (latest)
     draft-ietf-hybi-10
-    draft-ietf-hybi-00
+    draft-ietf-hybi-00 (with HAProxy support)
     draft-hixie-75
 
 By default the latest version is used. The WebSocket version is detected
@@ -104,13 +103,15 @@ Lee Aylward
 
 Chia-liang Kao
 
+Atomer Ju
+
 =head1 AUTHOR
 
 Viacheslav Tykhanovskyi, C<vti@cpan.org>.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2010-2011, Viacheslav Tykhanovskyi.
+Copyright (C) 2010-2012, Viacheslav Tykhanovskyi.
 
 This program is free software, you can redistribute it and/or modify it under
 the same terms as Perl 5.10.
