@@ -3,7 +3,7 @@ package Protocol::WebSocket;
 use strict;
 use warnings;
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 
 use Protocol::WebSocket::Frame;
 use Protocol::WebSocket::Handshake::Client;
@@ -109,6 +109,10 @@ Lee Aylward
 Chia-liang Kao
 
 Atomer Ju
+
+Chuck Bredestege
+
+Matthew Lien (BlueT)
 
 =head1 AUTHOR
 
