@@ -1,4 +1,7 @@
 Changes
+LICENSE
+MANIFEST.SKIP
+cpanfile
 examples/anyevent-http-server.pl
 examples/anyevent.pl
 examples/event.pl
@@ -13,17 +16,6 @@ examples/nginx-engine.pl
 examples/plack.psgi
 examples/poe.pl
 examples/reflex.pl
-inc/Module/AutoInstall.pm
-inc/Module/Install.pm
-inc/Module/Install/AutoInstall.pm
-inc/Module/Install/Base.pm
-inc/Module/Install/Can.pm
-inc/Module/Install/Fetch.pm
-inc/Module/Install/Include.pm
-inc/Module/Install/Makefile.pm
-inc/Module/Install/Metadata.pm
-inc/Module/Install/Win32.pm
-inc/Module/Install/WriteAll.pm
 lib/Protocol/WebSocket.pm
 lib/Protocol/WebSocket/Cookie.pm
 lib/Protocol/WebSocket/Cookie/Request.pm
@@ -37,12 +29,6 @@ lib/Protocol/WebSocket/Request.pm
 lib/Protocol/WebSocket/Response.pm
 lib/Protocol/WebSocket/Stateful.pm
 lib/Protocol/WebSocket/URL.pm
-Makefile.PL
-MANIFEST			This list of files
-MANIFEST.SKIP
-META.yml
-MYMETA.json
-MYMETA.yml
 t/challenge
 t/cookie.t
 t/draft-hixie-75/request.t
@@ -70,6 +56,11 @@ t/message.t
 t/request_common.t
 t/response_common.t
 t/url.t
+util/wsconsole
 xt/changes.t
 xt/pod-coverage.t
 xt/pod.t
+Build.PL
+META.json
+META.yml
+MANIFEST
