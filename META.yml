@@ -8,7 +8,7 @@ configure_requires:
   CPAN::Meta::Prereqs: 0
   Module::Build: 0.38
 dynamic_config: 0
-generated_by: 'Minilla/v0.4.3, CPAN::Meta::Converter version 2.130880'
+generated_by: 'Minilla/v0.7.5, CPAN::Meta::Converter version 2.130880'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -23,10 +23,11 @@ no_index:
     - eg
     - examples
     - author
+    - builder
 provides:
   Protocol::WebSocket:
     file: lib/Protocol/WebSocket.pm
-    version: 0.13
+    version: 0.14
   Protocol::WebSocket::Cookie:
     file: lib/Protocol/WebSocket/Cookie.pm
   Protocol::WebSocket::Cookie::Request:
@@ -60,7 +61,7 @@ resources:
   bugtracker: https://github.com/vti/protocol-websocket/issues
   homepage: https://github.com/vti/protocol-websocket
   repository: git://github.com/vti/protocol-websocket.git
-version: 0.13
+version: 0.14
 x_contributors:
   - 'Jon Gentle <atrodo@atrodo.org>'
   - 'Lee Aylward <lee@laylward.com>'
@@ -69,4 +70,5 @@ x_contributors:
   - 'Joao Orui <joao@joao.jp>'
   - 'Jonathan Barber <jonathan.barber@gmail.com>'
   - 'Toshio Ito <debug.ito@gmail.com>'
+  - 'Neil Bowers <neil@bowers.com>'
   - 'vti <viacheslav.t@gmail.com>'
