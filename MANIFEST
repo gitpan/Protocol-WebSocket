@@ -29,6 +29,7 @@ lib/Protocol/WebSocket/Request.pm
 lib/Protocol/WebSocket/Response.pm
 lib/Protocol/WebSocket/Stateful.pm
 lib/Protocol/WebSocket/URL.pm
+minil.toml
 t/challenge
 t/cookie.t
 t/draft-hixie-75/request.t

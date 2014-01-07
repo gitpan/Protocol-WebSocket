@@ -23,7 +23,7 @@ my %args = (
         'Module::Build' => 0.38,
     },
 
-    name            => 'protocol-websocket',
+    name            => 'Protocol-WebSocket',
     module_name     => 'Protocol::WebSocket',
     allow_pureperl => 0,
 

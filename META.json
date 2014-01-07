@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "protocol-websocket",
+   "name" : "Protocol-WebSocket",
    "no_index" : {
       "directory" : [
          "t",
@@ -53,7 +53,7 @@
    "provides" : {
       "Protocol::WebSocket" : {
          "file" : "lib/Protocol/WebSocket.pm",
-         "version" : "0.15"
+         "version" : "0.16"
       },
       "Protocol::WebSocket::Cookie" : {
          "file" : "lib/Protocol/WebSocket/Cookie.pm"
@@ -103,7 +103,7 @@
          "web" : "https://github.com/vti/protocol-websocket"
       }
    },
-   "version" : "0.15",
+   "version" : "0.16",
    "x_contributors" : [
       "Jon Gentle <atrodo@atrodo.org>",
       "Lee Aylward <lee@laylward.com>",
@@ -113,6 +113,6 @@
       "Jonathan Barber <jonathan.barber@gmail.com>",
       "Neil Bowers <neil@bowers.com>",
       "Toshio Ito <debug.ito@gmail.com>",
-      "Viacheslav Tykhanovskyi <viacheslav.t@gmail.com>"
+      "vti <viacheslav.t@gmail.com>"
    ]
 }
