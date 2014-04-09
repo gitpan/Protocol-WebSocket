@@ -4,7 +4,7 @@
       "Viacheslav Tykhanovskyi, C<vti@cpan.org>."
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v0.7.5",
+   "generated_by" : "Minilla/v0.14.1",
    "license" : [
       "perl_5"
    ],
@@ -36,7 +36,8 @@
       "develop" : {
          "requires" : {
             "Test::CPAN::Meta" : "0",
-            "Test::MinimumVersion" : "0.10108",
+            "Test::MinimumVersion::Fast" : "0.04",
+            "Test::PAUSE::Permissions" : "0.04",
             "Test::Pod" : "1.41",
             "Test::Spellunker" : "v0.2.7"
          }
@@ -53,7 +54,10 @@
    "provides" : {
       "Protocol::WebSocket" : {
          "file" : "lib/Protocol/WebSocket.pm",
-         "version" : "0.16"
+         "version" : "0.17"
+      },
+      "Protocol::WebSocket::Client" : {
+         "file" : "lib/Protocol/WebSocket/Client.pm"
       },
       "Protocol::WebSocket::Cookie" : {
          "file" : "lib/Protocol/WebSocket/Cookie.pm"
@@ -103,16 +107,18 @@
          "web" : "https://github.com/vti/protocol-websocket"
       }
    },
-   "version" : "0.16",
+   "version" : "0.17",
    "x_contributors" : [
       "Jon Gentle <atrodo@atrodo.org>",
       "Lee Aylward <lee@laylward.com>",
       "Chia-liang Kao <clkao@clkao.org>",
-      "BlueT - Matthew Lien - ç·´åæ <BlueT@BlueT.org>",
+      "BlueT - Matthew Lien - 練喆明 <BlueT@BlueT.org>",
       "Joao Orui <joao@joao.jp>",
       "Jonathan Barber <jonathan.barber@gmail.com>",
       "Neil Bowers <neil@bowers.com>",
       "Toshio Ito <debug.ito@gmail.com>",
+      "Michal Špaček <tupinek@gmail.com>",
+      "Graham Ollis <plicease@cpan.org>",
       "vti <viacheslav.t@gmail.com>"
    ]
 }
