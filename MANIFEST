@@ -63,7 +63,7 @@ util/wsconsole
 xt/changes.t
 xt/pod-coverage.t
 xt/pod.t
-Build.PL
 META.json
 META.yml
 MANIFEST
+Build.PL

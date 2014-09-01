@@ -4,7 +4,7 @@
       "Viacheslav Tykhanovskyi, C<vti@cpan.org>."
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v0.14.1",
+   "generated_by" : "Minilla/v2.1.1",
    "license" : [
       "perl_5"
    ],
@@ -28,8 +28,6 @@
    "prereqs" : {
       "configure" : {
          "requires" : {
-            "CPAN::Meta" : "0",
-            "CPAN::Meta::Prereqs" : "0",
             "Module::Build" : "0.38"
          }
       },
@@ -46,7 +44,7 @@
          "requires" : {
             "Carp" : "0",
             "Digest::MD5" : "0",
-            "Digest::SHA1" : "0",
+            "Digest::SHA" : "0",
             "Scalar::Util" : "0"
          }
       }
@@ -54,7 +52,7 @@
    "provides" : {
       "Protocol::WebSocket" : {
          "file" : "lib/Protocol/WebSocket.pm",
-         "version" : "0.17"
+         "version" : "0.18"
       },
       "Protocol::WebSocket::Client" : {
          "file" : "lib/Protocol/WebSocket/Client.pm"
@@ -107,7 +105,7 @@
          "web" : "https://github.com/vti/protocol-websocket"
       }
    },
-   "version" : "0.17",
+   "version" : "0.18",
    "x_contributors" : [
       "Jon Gentle <atrodo@atrodo.org>",
       "Lee Aylward <lee@laylward.com>",
@@ -117,8 +115,8 @@
       "Jonathan Barber <jonathan.barber@gmail.com>",
       "Neil Bowers <neil@bowers.com>",
       "Toshio Ito <debug.ito@gmail.com>",
-      "Michal Špaček <tupinek@gmail.com>",
       "Graham Ollis <plicease@cpan.org>",
-      "vti <viacheslav.t@gmail.com>"
+      "Michal Špaček <tupinek@gmail.com>",
+      "Viacheslav Tykhanovskyi <viacheslav.t@gmail.com>"
    ]
 }
